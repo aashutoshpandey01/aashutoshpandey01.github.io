@@ -1,48 +1,39 @@
-Aashutosh Pandey — Personal Portfolio
+# Aashutosh Pandey — Cloud & Infrastructure Portfolio
 
-What is this repository?
+## Overview
 
-This repository hosts my personal portfolio landing page using GitHub Pages.
+This repository hosts my personal portfolio landing page, published using **GitHub Pages**.
 
-It provides one central page connecting my:
+It serves as a central hub for showcasing my technical projects, professional profile, verified certifications, and cloud infrastructure learning journey.
 
-- GitHub — Technical Projects
-- LinkedIn — Professional Profile
-- X — Social Profile
+## Explore My Profiles
 
-How does it work?
+- **GitHub:** Technical projects, server administration, and automation
+- **LinkedIn:** Professional profile, career development, and networking
+- **Credly:** Verified digital badges and certifications
+- **X:** Social profile and technology interests
 
-X / LinkedIn / Any Visitor
-          ↓
+## How It Works
+
+Visitors access the portfolio and choose the platform they want to explore.
+
+```text
+Visitor / Recruiter
+        |
+        v
 aashutoshpandey01.github.io
-          ↓
-   ┌──────────────┐
-   │ GitHub       │
-   │ LinkedIn     │
-   │ X            │
-   └──────────────┘
+        |
+        +-- GitHub   --> Technical Projects
+        |
+        +-- LinkedIn --> Professional Profile
+        |
+        +-- Credly   --> Verified Certifications
+        |
+        +-- X        --> Social Profile
+```
 
-Each button independently opens the selected platform.
+Each link independently opens the selected platform.
 
-Technologies Used
+## Technologies Used
 
-- HTML5
-- CSS3
-- GitHub
-- GitHub Pages
-
-Project Structure
-
-aashutoshpandey01.github.io/
-├── index.html
-└── README.md
-
-Live Website
-
-https://aashutoshpandey01.github.io
-
-Author
-
-Aashutosh Pandey
-
-Cloud Support | Windows Server | Ubuntu Server | PowerShell | Bash | Git
+- **HTML5** —
