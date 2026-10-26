@@ -1,62 +1,455 @@
-<!DOCTYPE html><html lang="en">
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aashutosh Pandey | Cloud & Infrastructure</title><style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 60px 20px;
-        background: #f4f6f8;
-    }
 
-    .container {
-        max-width: 500px;
-        margin: auto;
-    }
+    <meta name="theme-color" content="#080d19">
+    <meta name="description" content="Aashutosh Pandey — Cloud Administration, Infrastructure, Networking and Automation portfolio.">
 
-    h1 {
-        margin-bottom: 10px;
-    }
+    <title>Aashutosh Pandey | Cloud & Infrastructure</title>
 
-    p {
-        color: #555;
-    }
+    <style>
+        :root {
+            --bg: #080d19;
+            --panel: rgba(17, 27, 47, 0.78);
+            --text: #f1f5f9;
+            --muted: #a4b2c8;
+            --accent: #55c7ff;
+            --accent2: #8b7cff;
+            --border: rgba(148, 178, 220, 0.18);
+        }
 
-    a {
-        display: block;
-        margin: 20px 0;
-        padding: 15px;
-        background: #222;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    a:hover {
-        opacity: 0.8;
-    }
-</style>
+        html {
+            scroll-behavior: smooth;
+        }
 
-</head><body><div class="container">
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 32px 18px;
+            overflow-x: hidden;
+            color: var(--text);
+            background: var(--bg);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+        }
 
-    <h1>Aashutosh Pandey</h1>
+        /* Animated background */
+        .background {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at 15% 15%,
+                    rgba(36, 103, 191, 0.22), transparent 45%),
+                radial-gradient(ellipse at 85% 75%,
+                    rgba(112, 72, 213, 0.19), transparent 42%),
+                var(--bg);
+        }
 
-    <p>Cloud Support | Windows Server | Ubuntu Server | PowerShell | Bash | Git</p>
+        .background::before {
+            content: "";
+            position: absolute;
+            inset: -50%;
+            background-image:
+                linear-gradient(rgba(111, 161, 219, 0.055) 1px,
+                    transparent 1px),
+                linear-gradient(90deg, rgba(111, 161, 219, 0.055) 1px,
+                    transparent 1px);
+            background-size: 48px 48px;
+            transform: perspective(700px) rotateX(12deg);
+            animation: gridMove 28s linear infinite;
+        }
 
-    <a href="https://github.com/aashutoshpandey01" target="_blank">
-        GitHub — Technical Projects
-    </a>
+        .orb {
+            position: absolute;
+            width: 330px;
+            height: 330px;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.25;
+            animation: float 13s ease-in-out infinite alternate;
+        }
 
-    <a href="https://www.linkedin.com/in/aashutosh-pandey-7995b7416" target="_blank">
-        LinkedIn — Professional Profile
-    </a>
+        .orb-one {
+            top: -100px;
+            left: -100px;
+            background: #1678ff;
+        }
 
-    <a href="https://x.com/the_aashupandey" target="_blank">
-        X — Social Profile
-    </a>
+        .orb-two {
+            right: -100px;
+            bottom: -100px;
+            background: #7549ff;
+            animation-delay: -6s;
+        }
 
-</div>
+        @keyframes gridMove {
+            from { background-position: 0 0; }
+            to { background-position: 48px 48px; }
+        }
 
+        @keyframes float {
+            from { transform: translate(0, 0); }
+            to { transform: translate(55px, -35px); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 760px;
+            padding: 42px;
+            text-align: center;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 28px 90px rgba(0, 0, 0, 0.28);
+            animation: appear 0.8s ease-out both;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 25px;
+            padding: 8px 13px;
+            color: #b8f7d0;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.22);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 12px rgba(74, 222, 128, 0.8);
+        }
+
+        h1 {
+            font-size: clamp(32px, 6vw, 48px);
+            font-weight: 750;
+            letter-spacing: -1.7px;
+            line-height: 1.15;
+        }
+
+        .gradient-text {
+            color: var(--accent);
+            background: linear-gradient(90deg, #55c7ff, #a69aff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .role {
+            margin-top: 15px;
+            color: #d1def0;
+            font-size: 14px;
+            line-height: 1.9;
+            letter-spacing: 0.5px;
+        }
+
+        .divider {
+            width: 64px;
+            height: 3px;
+            margin: 26px auto;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        .summary {
+            max-width: 590px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        .summary strong {
+            color: #e6edf8;
+            font-weight: 600;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 9px;
+            margin: 25px 0 30px;
+        }
+
+        .skill {
+            padding: 8px 12px;
+            color: #c9d8ed;
+            background: rgba(148, 178, 220, 0.07);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .section-label {
+            margin-bottom: 14px;
+            color: #8295b0;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .links {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            text-align: left;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            padding: 16px;
+            color: var(--text);
+            text-decoration: none;
+            background: rgba(148, 178, 220, 0.045);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            transition:
+                transform 0.22s ease,
+                border-color 0.22s ease,
+                background 0.22s ease;
+        }
+
+        .link-card:hover,
+        .link-card:focus-visible {
+            transform: translateY(-3px);
+            border-color: rgba(85, 199, 255, 0.55);
+            background: rgba(85, 199, 255, 0.075);
+            outline: none;
+        }
+
+        .link-icon {
+            display: grid;
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            color: var(--accent);
+            background: rgba(85, 199, 255, 0.09);
+            border: 1px solid rgba(85, 199, 255, 0.14);
+            border-radius: 11px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .link-copy {
+            min-width: 0;
+        }
+
+        .link-title {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        .link-description {
+            display: block;
+            overflow-wrap: anywhere;
+            color: #91a3bc;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .arrow {
+            margin-left: auto;
+            color: #8295b0;
+            font-size: 18px;
+        }
+
+        footer {
+            margin-top: 30px;
+            color: #72839d;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        footer span {
+            color: #a7b6ca;
+        }
+
+        @media (max-width: 540px) {
+            body {
+                padding: 18px 12px;
+            }
+
+            .container {
+                padding: 30px 19px;
+                border-radius: 20px;
+            }
+
+            .links {
+                grid-template-columns: 1fr;
+            }
+
+            .role {
+                font-size: 12px;
+            }
+
+            .summary {
+                font-size: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                scroll-behavior: auto !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background" aria-hidden="true">
+        <div class="orb orb-one"></div>
+        <div class="orb orb-two"></div>
+    </div>
+
+    <main class="container">
+        <div class="status">
+            <span class="status-dot"></span>
+            Cloud & Infrastructure
+        </div>
+
+        <header>
+            <h1>
+                Aashutosh <span class="gradient-text">Pandey</span>
+            </h1>
+
+            <p class="role">
+                Cloud Administration · Systems · Networking · Automation
+            </p>
+        </header>
+
+        <div class="divider"></div>
+
+        <p class="summary">
+            Aspiring <strong>Cloud Administrator</strong> focused on AWS,
+            Azure, GCP, Linux, Windows Server, networking, and automation.
+            Passionate about building reliable infrastructure, streamlining
+            IT operations, solving complex technical issues, and delivering
+            secure, efficient cloud and systems solutions.
+        </p>
+
+        <div class="skills" aria-label="Technical focus areas">
+            <span class="skill">AWS</span>
+            <span class="skill">Microsoft Azure</span>
+            <span class="skill">Google Cloud</span>
+            <span class="skill">Linux</span>
+            <span class="skill">Windows Server</span>
+            <span class="skill">Networking</span>
+            <span class="skill">PowerShell</span>
+            <span class="skill">Bash</span>
+            <span class="skill">Git & GitHub</span>
+        </div>
+
+        <p class="section-label">Explore My Work</p>
+
+        <nav class="links" aria-label="Professional profiles">
+
+            <a class="link-card"
+               href="https://github.com/aashutoshpandey01"
+               target="_blank"
+               rel="noopener noreferrer">
+                <span class="link-icon" aria-hidden="true">GH</span>
+                <span class="link-copy">
+                    <span class="link-title">GitHub</span>
+                    <span class="link-description">
+                        Technical projects & automation
+                    </span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+            <a class="link-card"
+               href="https://www.linkedin.com/in/aashutosh-pandey-7995b7416"
+               target="_blank"
+               rel="noopener noreferrer">
+                <span class="link-icon" aria-hidden="true">in</span>
+                <span class="link-copy">
+                    <span class="link-title">LinkedIn</span>
+                    <span class="link-description">
+                        Professional profile & career
+                    </span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+            <a class="link-card"
+               href="https://www.credly.com/users/aashutosh-pandey01/badges/credly"
+               target="_blank"
+               rel="noopener noreferrer">
+                <span class="link-icon" aria-hidden="true">✓</span>
+                <span class="link-copy">
+                    <span class="link-title">Credly</span>
+                    <span class="link-description">
+                        Certifications & verified badges
+                    </span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+            <a class="link-card"
+               href="https://x.com/the_aashupandey"
+               target="_blank"
+               rel="noopener noreferrer">
+                <span class="link-icon" aria-hidden="true">𝕏</span>
+                <span class="link-copy">
+                    <span class="link-title">X / Twitter</span>
+                    <span class="link-description">
+                        Social profile & tech interests
+                    </span>
+                </span>
+                <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+
+        </nav>
+
+        <footer>
+            <span>Aashutosh Pandey</span> · Cloud & Infrastructure<br>
+            Learning. Building. Troubleshooting. Automating.
+        </footer>
+    </main>
 </body>
 </html>
