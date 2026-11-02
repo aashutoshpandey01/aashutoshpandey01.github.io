@@ -1,1743 +1,274 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080d19">
-  <meta name="description" content="Aashutosh Pandey — Cloud & Infrastructure. Exploring cloud administration, systems, networking, Linux, and automation.">
-  <title>Aashutosh Pandey | Cloud & Infrastructure</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg: #080d19;
-      --bg-soft: #0d1525;
-      --panel: rgba(17, 28, 47, .72);
-      --panel-strong: rgba(20, 33, 55, .92);
-      --border: rgba(148, 178, 220, .14);
-      --text: #e8eef8;
-      --muted: #9aaac2;
-      --cyan: #55d6e8;
-      --blue: #6d9dff;
-      --purple: #a88aff;
-      --green: #72d6a1;
-      --radius: 20px;
-      --max-width: 1120px;
-      --shadow: 0 20px 70px rgba(0, 0, 0, .25);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 90px;
-    }
-
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-      color: var(--text);
-      background:
-        radial-gradient(ellipse at 12% 8%, rgba(49, 105, 190, .16), transparent 35%),
-        radial-gradient(ellipse at 88% 20%, rgba(112, 74, 180, .13), transparent 32%),
-        radial-gradient(ellipse at 55% 90%, rgba(36, 132, 150, .09), transparent 35%),
-        var(--bg);
-      font-family: "Inter", sans-serif;
-      line-height: 1.7;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      opacity: .18;
-      background-image:
-        linear-gradient(rgba(117, 156, 207, .12) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(117, 156, 207, .12) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: linear-gradient(to bottom, black, transparent 90%);
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      width: 520px;
-      height: 520px;
-      top: 12%;
-      left: 50%;
-      z-index: -1;
-      pointer-events: none;
-      transform: translateX(-50%);
-      background: radial-gradient(circle, rgba(66, 128, 205, .09), transparent 68%);
-      filter: blur(20px);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .container {
-      width: min(var(--max-width), calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    .mono {
-      font-family: "DM Mono", monospace;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .gradient-text {
-      color: transparent;
-      background: linear-gradient(100deg, var(--cyan), var(--blue), var(--purple));
-      -webkit-background-clip: text;
-      background-clip: text;
-    }
-
-    /* Navigation */
-
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid rgba(148, 178, 220, .1);
-      background: rgba(8, 13, 25, .78);
-      backdrop-filter: blur(18px);
-    }
-
-    .nav-inner {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: -.5px;
-      white-space: nowrap;
-    }
-
-    .brand span {
-      color: var(--cyan);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 600;
-      transition: color .2s ease;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--cyan);
-    }
-
-    .nav-cta {
-      padding: 9px 15px;
-      border: 1px solid rgba(85, 214, 232, .35);
-      border-radius: 9px;
-      color: var(--cyan) !important;
-    }
-
-    .menu-toggle {
-      display: none;
-      width: 40px;
-      height: 40px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      background: var(--panel);
-      cursor: pointer;
-    }
-
-    /* Common sections */
-
-    section {
-      padding: 76px 0;
-    }
-
-    .section-heading {
-      max-width: 720px;
-      margin-bottom: 30px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      margin-bottom: 12px;
-      color: var(--cyan);
-      font-family: "DM Mono", monospace;
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 20px;
-      height: 1px;
-      background: var(--cyan);
-    }
-
-    h2 {
-      margin-bottom: 10px;
-      font-size: clamp(27px, 4vw, 38px);
-      line-height: 1.2;
-      letter-spacing: -1.3px;
-    }
-
-    .section-description {
-      max-width: 650px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .glass {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-
-    .card {
-      padding: 24px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: rgba(17, 28, 47, .58);
-      transition: transform .25s ease, border-color .25s ease, background .25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(85, 214, 232, .3);
-      background: rgba(22, 38, 62, .76);
-    }
-
-    .card h3 {
-      margin-bottom: 8px;
-      font-size: 16px;
-      letter-spacing: -.3px;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .tag-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-top: 18px;
-    }
-
-    .tag {
-      display: inline-flex;
-      padding: 6px 11px;
-      border: 1px solid rgba(119, 158, 211, .18);
-      border-radius: 7px;
-      color: #c4d3e9;
-      background: rgba(35, 55, 83, .38);
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-    }
-
-    .text-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      margin-top: 16px;
-      color: var(--cyan);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .text-link:hover {
-      color: #a4f3fb;
-    }
-
-    /* Home / Hero */
-
-    .hero {
-      min-height: 650px;
-      display: flex;
-      align-items: center;
-      padding: 90px 0 85px;
-    }
-
-    .hero-panel {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      padding: clamp(30px, 6vw, 70px);
-      border: 1px solid rgba(133, 171, 222, .18);
-      border-radius: 26px;
-      background:
-        linear-gradient(135deg, rgba(20, 38, 65, .86), rgba(13, 22, 39, .76)),
-        var(--panel);
-      box-shadow: 0 30px 100px rgba(0, 0, 0, .28);
-      backdrop-filter: blur(20px);
-    }
-
-    .hero-panel::before {
-      content: "";
-      position: absolute;
-      width: 380px;
-      height: 380px;
-      top: -170px;
-      right: -100px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(85, 214, 232, .18), transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-panel::after {
-      content: "";
-      position: absolute;
-      width: 280px;
-      height: 280px;
-      right: 10%;
-      bottom: -220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(168, 138, 255, .16), transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 800px;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      margin-bottom: 28px;
-      padding: 8px 13px;
-      border: 1px solid rgba(114, 214, 161, .22);
-      border-radius: 30px;
-      color: #a9eac5;
-      background: rgba(49, 129, 87, .12);
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 12px rgba(114, 214, 161, .8);
-    }
-
-    .hero h1 {
-      max-width: 850px;
-      margin-bottom: 15px;
-      font-size: clamp(42px, 7vw, 76px);
-      line-height: 1.06;
-      letter-spacing: -4px;
-    }
-
-    .hero-role {
-      margin-bottom: 22px;
-      color: #b9cbe4;
-      font-size: clamp(15px, 2vw, 19px);
-      font-weight: 600;
-      letter-spacing: .2px;
-    }
-
-    .hero-summary {
-      max-width: 680px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.9;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 30px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      min-height: 44px;
-      padding: 11px 18px;
-      border: 1px solid transparent;
-      border-radius: 9px;
-      font-size: 12px;
-      font-weight: 700;
-      transition: .2s ease;
-    }
-
-    .button-primary {
-      color: #07121b;
-      background: linear-gradient(110deg, var(--cyan), #8abaff);
-    }
-
-    .button-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(85, 214, 232, .18);
-    }
-
-    .button-secondary {
-      border-color: var(--border);
-      color: var(--text);
-      background: rgba(255, 255, 255, .035);
-    }
-
-    .button-secondary:hover {
-      border-color: rgba(85, 214, 232, .4);
-      color: var(--cyan);
-    }
-
-    .hero-tags {
-      margin-top: 34px;
-    }
-
-    /* About */
-
-    .about-panel {
-      padding: clamp(25px, 4vw, 38px);
-    }
-
-    .about-panel p {
-      margin-bottom: 16px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.95;
-    }
-
-    .about-panel p:last-child {
-      margin-bottom: 0;
-    }
-
-    .about-panel strong {
-      color: #dce8f8;
-      font-weight: 600;
-    }
-
-    /* Technical skills */
-
-    .skill-card .skill-icon,
-    .project-icon,
-    .journey-icon {
-      display: inline-grid;
-      width: 42px;
-      height: 42px;
-      place-items: center;
-      margin-bottom: 17px;
-      border: 1px solid rgba(85, 214, 232, .18);
-      border-radius: 12px;
-      color: var(--cyan);
-      background: rgba(85, 214, 232, .07);
-      font-family: "DM Mono", monospace;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    /* Projects and labs */
-
-    .project-card {
-      display: flex;
-      flex-direction: column;
-      min-height: 245px;
-    }
-
-    .project-card .text-link {
-      margin-top: auto;
-      padding-top: 16px;
-    }
-
-    .project-card .tag-list {
-      margin-top: 14px;
-    }
-
-    /* Technical journey */
-
-    .journey-list {
-      display: grid;
-      gap: 16px;
-    }
-
-    .journey-item {
-      display: grid;
-      grid-template-columns: 55px 1fr;
-      gap: 18px;
-      padding: 23px;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      background: rgba(17, 28, 47, .54);
-    }
-
-    .journey-item .journey-icon {
-      margin: 0;
-    }
-
-    .journey-item h3 {
-      margin-bottom: 7px;
-      font-size: 15px;
-    }
-
-    .journey-item p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* Certifications and learning */
-
-    .cert-panel {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 25px;
-      padding: 30px;
-    }
-
-    .cert-panel h3 {
-      margin-bottom: 8px;
-      font-size: 18px;
-    }
-
-    .cert-panel p {
-      max-width: 620px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .learning-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .learning-item {
-      padding: 13px 15px;
-      border: 1px solid rgba(148, 178, 220, .1);
-      border-radius: 10px;
-      color: #c7d5e9;
-      background: rgba(255, 255, 255, .025);
-      font-size: 12px;
-    }
-
-    .learning-item::before {
-      content: "✓";
-      margin-right: 10px;
-      color: var(--green);
-      font-weight: 800;
-    }
-
-    /* Professional interests */
-
-    .interest-card {
-      position: relative;
-      overflow: hidden;
-      min-height: 185px;
-    }
-
-    .interest-card::after {
-      content: "";
-      position: absolute;
-      width: 110px;
-      height: 110px;
-      right: -45px;
-      bottom: -50px;
-      border-radius: 50%;
-      background: rgba(85, 214, 232, .06);
-    }
-
-    .interest-card h3 {
-      color: #dce9f9;
-    }
-
-    /* GitHub */
-
-    .github-panel {
-      padding: clamp(24px, 4vw, 38px);
-    }
-
-    .github-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 25px;
-    }
-
-    .github-profile {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .github-avatar {
-      width: 58px;
-      height: 58px;
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      background: #17243a;
-      object-fit: cover;
-    }
-
-    .github-profile h3 {
-      font-size: 16px;
-    }
-
-    .github-profile p {
-      color: var(--muted);
-      font-family: "DM Mono", monospace;
-      font-size: 11px;
-    }
-
-    .github-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-
-    .stat {
-      padding: 19px 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, .025);
-      text-align: center;
-    }
-
-    .stat strong {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--cyan);
-      font-family: "DM Mono", monospace;
-      font-size: 25px;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    .repo-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 14px;
-    }
-
-    .repo-heading h3 {
-      font-size: 15px;
-    }
-
-    .repo-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .repo {
-      padding: 17px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, .025);
-      transition: border-color .2s ease;
-    }
-
-    .repo:hover {
-      border-color: rgba(85, 214, 232, .35);
-    }
-
-    .repo a {
-      color: #dbe9fa;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .repo a:hover {
-      color: var(--cyan);
-    }
-
-    .repo p {
-      min-height: 38px;
-      margin: 7px 0 12px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .repo-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 13px;
-      color: #91a5c0;
-      font-family: "DM Mono", monospace;
-      font-size: 10px;
-    }
-
-    .api-note {
-      margin-top: 16px;
-      color: #8194ae;
-      font-size: 10px;
-    }
-
-    /* Contact */
-
-    .contact-panel {
-      padding: clamp(28px, 5vw, 48px);
-      text-align: center;
-    }
-
-    .contact-panel h2 {
-      margin-bottom: 13px;
-    }
-
-    .contact-panel > p {
-      max-width: 610px;
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .contact-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 11px;
-      margin-top: 27px;
-    }
-
-    .contact-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      color: #c9d8eb;
-      background: rgba(255, 255, 255, .03);
-      font-size: 11px;
-      transition: .2s ease;
-    }
-
-    .contact-link:hover {
-      border-color: rgba(85, 214, 232, .4);
-      color: var(--cyan);
-      transform: translateY(-2px);
-    }
-
-    .contact-link.whatsapp {
-      border-color: rgba(114, 214, 161, .25);
-      color: #9be5ba;
-    }
-
-    /* Footer */
-
-    footer {
-      padding: 27px 0;
-      border-top: 1px solid rgba(148, 178, 220, .1);
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      color: #8293ab;
-      font-size: 11px;
-    }
-
-    .footer-inner a {
-      color: var(--cyan);
-    }
-
-    .back-top {
-      position: fixed;
-      right: 22px;
-      bottom: 22px;
-      z-index: 90;
-      display: grid;
-      width: 42px;
-      height: 42px;
-      place-items: center;
-      border: 1px solid rgba(85, 214, 232, .3);
-      border-radius: 12px;
-      color: var(--cyan);
-      background: rgba(13, 22, 39, .9);
-      cursor: pointer;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(8px);
-      transition: .2s ease;
-    }
-
-    .back-top.visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-
-    /* Reveal animation */
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity .65s ease, transform .65s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Responsive */
-
-    @media (max-width: 900px) {
-      .nav-links {
-        gap: 13px;
-      }
-
-      .nav-links a {
-        font-size: 11px;
-      }
-
-      .grid-3 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .nav-inner {
-        min-height: 65px;
-      }
-
-      .menu-toggle {
-        display: grid;
-        place-items: center;
-      }
-
-      .nav-links {
-        position: absolute;
-        top: 65px;
-        left: 0;
-        right: 0;
-        display: none;
-        align-items: stretch;
-        gap: 0;
-        padding: 10px 20px 18px;
-        border-bottom: 1px solid var(--border);
-        background: rgba(8, 13, 25, .97);
-      }
-
-      .nav-links.open {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .nav-links a {
-        padding: 11px 5px;
-        font-size: 13px;
-      }
-
-      .nav-cta {
-        margin-top: 8px;
-        text-align: center;
-      }
-
-      section {
-        padding: 58px 0;
-      }
-
-      .hero {
-        min-height: auto;
-        padding: 55px 0;
-      }
-
-      .hero h1 {
-        letter-spacing: -2.5px;
-      }
-
-      .grid-2,
-      .grid-3,
-      .repo-list {
-        grid-template-columns: 1fr;
-      }
-
-      .cert-panel,
-      .github-top {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .github-stats {
-        gap: 8px;
-      }
-
-      .stat {
-        padding: 14px 6px;
-      }
-
-      .stat strong {
-        font-size: 21px;
-      }
-
-      .journey-item {
-        grid-template-columns: 43px 1fr;
-        gap: 13px;
-        padding: 18px;
-      }
-
-      .journey-item .journey-icon {
-        width: 40px;
-        height: 40px;
-      }
-
-      .footer-inner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important;
-      }
-
-      .reveal {
-        opacity: 1;
-        transform: none;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<meta name="description" content="Aashutosh Pandey — Cloud Support, Cloud Administration and Infrastructure portfolio.">
+<meta name="author" content="Aashutosh Pandey">
+<title>Aashutosh Pandey | Cloud & Infrastructure Portfolio</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1c30;--panel2:#11243b;--text:#edf5ff;--muted:#9aadc4;--accent:#35c8ff;--purple:#8876ff;--green:#42dda0;--border:rgba(145,180,220,.16);--radius:18px;--max:1440px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:85px}
+body{background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI",Arial,sans-serif;line-height:1.65;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.background{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 10% 10%,rgba(0,125,255,.16),transparent 38%),radial-gradient(ellipse at 90% 55%,rgba(116,65,255,.12),transparent 40%),var(--bg)}
+.background:before{content:"";position:absolute;inset:0;opacity:.25;background-image:linear-gradient(rgba(100,160,220,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(100,160,220,.07) 1px,transparent 1px);background-size:55px 55px}
+.orb{position:absolute;width:350px;height:350px;border-radius:50%;filter:blur(100px);opacity:.13;animation:float 14s ease-in-out infinite alternate}
+.orb.one{top:10%;left:-180px;background:#168aff}.orb.two{right:-180px;top:55%;background:#7956ff;animation-delay:-5s}
+@keyframes float{to{transform:translate(60px,-40px)}}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(5,14,27,.88);border-bottom:1px solid var(--border);backdrop-filter:blur(18px)}
+.nav{max-width:var(--max);min-height:72px;padding:0 5%;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:25px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;white-space:nowrap}
+.brand-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;color:var(--accent);background:rgba(53,200,255,.1);border:1px solid rgba(53,200,255,.25);font-size:20px}
+.nav-links{display:flex;align-items:center;gap:22px}.nav-links a{color:var(--muted);font-size:13px;font-weight:600}.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.nav-cta{padding:10px 16px;border:1px solid rgba(53,200,255,.45);border-radius:10px;color:var(--accent)!important}
+.menu-toggle{display:none;color:var(--text);background:transparent;border:1px solid var(--border);border-radius:9px;padding:8px 12px;cursor:pointer}
+.container{width:100%;max-width:var(--max);padding:0 5%;margin:auto}
+.hero{min-height:590px;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:55px;padding-top:85px;padding-bottom:85px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:8px 13px;color:#a8eaff;background:rgba(53,200,255,.08);border:1px solid rgba(53,200,255,.2);border-radius:50px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.pulse{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 12px var(--green)}
+h1{margin-top:24px;font-size:clamp(43px,6vw,76px);line-height:1.08;letter-spacing:-3px;font-weight:850}
+.gradient{background:linear-gradient(90deg,#35c8ff,#8b7cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-role{margin-top:20px;color:#d8e9ff;font-size:clamp(19px,2.4vw,27px);font-weight:650}.hero-role span{color:var(--accent)}
+.hero-description{max-width:690px;margin-top:20px;color:var(--muted);font-size:16px;line-height:1.9}
+.hero-tags,.skill-list,.project-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:25px}
+.tag,.skill-chip{padding:7px 12px;color:#c7d8ee;background:rgba(255,255,255,.035);border:1px solid var(--border);border-radius:8px;font-size:12px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:13px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 20px;border-radius:10px;font-size:13px;font-weight:750;transition:.2s}
+.btn-primary{color:#04121f;background:linear-gradient(100deg,#35c8ff,#86dfff);box-shadow:0 8px 28px rgba(53,200,255,.2)}
+.btn-secondary{color:var(--text);border:1px solid var(--border);background:rgba(255,255,255,.035)}.btn:hover{transform:translateY(-3px)}
+.hero-visual{position:relative;min-height:390px;display:grid;place-items:center}
+.cloud-graphic{width:min(100%,430px);aspect-ratio:1;position:relative;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle,rgba(36,147,255,.19),transparent 62%)}
+.cloud-graphic:before,.cloud-graphic:after{content:"";position:absolute;border:1px solid rgba(53,200,255,.23);border-radius:50%;inset:8%;animation:rotate 22s linear infinite}
+.cloud-graphic:after{inset:19%;border-color:rgba(139,124,255,.3);animation-direction:reverse;animation-duration:16s}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.cloud-symbol{font-size:clamp(100px,15vw,170px);color:var(--accent);text-shadow:0 0 35px rgba(53,200,255,.5);z-index:1}
+.visual-label{position:absolute;bottom:13%;right:0;padding:12px 16px;background:rgba(8,25,45,.92);border:1px solid rgba(53,200,255,.35);border-radius:12px;color:#c9eaff;font-size:12px}
+.section{padding-top:80px;padding-bottom:30px}.section-heading{margin-bottom:30px}
+.section-kicker{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.section-heading h2{margin-top:8px;font-size:clamp(27px,3vw,37px);letter-spacing:-1px}
+.section-heading p{max-width:720px;margin-top:10px;color:var(--muted);font-size:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{min-width:0;padding:25px;background:linear-gradient(145deg,rgba(17,36,59,.92),rgba(9,24,42,.92));border:1px solid var(--border);border-radius:var(--radius);transition:transform .25s,border-color .25s}
+.card:hover{transform:translateY(-4px);border-color:rgba(53,200,255,.38)}
+.card-icon{width:43px;height:43px;display:grid;place-items:center;margin-bottom:16px;border-radius:12px;color:var(--accent);background:rgba(53,200,255,.1);font-size:21px}
+.card h3{margin-bottom:10px;font-size:17px}.card p,.card li{color:var(--muted);font-size:13px;line-height:1.8}
+.check-list{display:grid;gap:9px;margin-top:17px;list-style:none}.check-list li:before{content:"✓";margin-right:9px;color:var(--green);font-weight:800}
+.journey{position:relative;padding-left:26px;border-left:2px solid rgba(53,200,255,.35)}
+.journey-item{position:relative;margin-bottom:25px}.journey-item:last-child{margin-bottom:0}
+.journey-item:before{content:"";position:absolute;width:11px;height:11px;left:-33px;top:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px rgba(53,200,255,.7)}
+.journey-item h4,.roadmap-step h4{font-size:14px}.journey-item p,.roadmap-step p{margin-top:4px;color:var(--muted);font-size:12px}
+.skill-group{margin-bottom:20px}.skill-group:last-child{margin-bottom:0}.skill-group h3{margin-bottom:13px;color:#dcecff;font-size:15px}
+.skill-chip{padding:9px 13px;border-radius:9px}.skill-chip.learning{border-color:rgba(139,124,255,.3);color:#c5bcff}
+.note{margin-top:20px;padding:15px 18px;color:var(--muted);background:rgba(53,200,255,.055);border-left:3px solid var(--accent);border-radius:7px;font-size:12px}
+.project-card{display:flex;flex-direction:column;min-height:245px}.project-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.project-symbol{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;color:var(--accent);background:rgba(53,200,255,.1);font-size:21px}
+.project-type{color:#a6b9d1;font-size:10px;letter-spacing:1px;text-transform:uppercase}.project-card p{flex:1}
+.project-tags{margin:16px 0;gap:7px}.project-tags span{padding:5px 8px;border-radius:6px;color:#a8eaff;background:rgba(53,200,255,.08);font-size:10px}
+.text-link{display:inline-flex;align-items:center;gap:7px;width:fit-content;color:var(--accent);font-size:12px;font-weight:700}.text-link:hover{text-decoration:underline}
+.lab-card{min-height:220px}.lab-card .card-icon{margin-bottom:12px}
+.roadmap-step{display:flex;align-items:flex-start;gap:15px;padding:18px 0;border-bottom:1px solid var(--border)}.roadmap-step:last-child{border-bottom:0}
+.step-number{flex-shrink:0;width:32px;height:32px;display:grid;place-items:center;border-radius:9px;color:var(--accent);background:rgba(53,200,255,.1);font-size:12px;font-weight:800}
+.cert-item{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}.cert-item:last-child{border-bottom:0}
+.cert-icon{flex-shrink:0;width:38px;height:38px;display:grid;place-items:center;border-radius:10px;color:var(--green);background:rgba(66,221,160,.09)}
+.cert-item h4{font-size:13px}.cert-item p{margin-top:4px;color:var(--muted);font-size:11px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.stat-card{padding:22px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:14px}
+.stat-value{display:block;color:var(--accent);font-size:31px;font-weight:850}.stat-label{color:var(--muted);font-size:12px}
+.github-note{margin-top:13px;color:var(--muted);font-size:11px}
+.repo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.repo-card{padding:20px;background:var(--panel);border:1px solid var(--border);border-radius:14px;min-width:0}
+.repo-card h3{font-size:14px;overflow-wrap:anywhere}.repo-card p{margin:9px 0;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.repo-meta{display:flex;gap:13px;color:var(--muted);font-size:11px}.repo-card a{color:var(--accent)}
+.contact-panel{display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:center;padding:35px;background:linear-gradient(120deg,rgba(19,62,97,.55),rgba(24,28,65,.55));border:1px solid rgba(53,200,255,.25);border-radius:22px}
+.contact-panel h3{font-size:25px}.contact-panel p{margin-top:10px;color:var(--muted);font-size:13px}
+.contact-links{display:grid;grid-template-columns:1fr 1fr;gap:10px}.contact-link{padding:13px;color:#d7e8fb;background:rgba(255,255,255,.045);border:1px solid var(--border);border-radius:10px;font-size:12px;transition:.2s}
+.contact-link:hover{border-color:var(--accent);color:var(--accent)}
+footer{margin-top:90px;padding:30px 5%;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:12px}footer strong{color:var(--text)}
+.back-top{position:fixed;right:22px;bottom:22px;z-index:50;width:43px;height:43px;display:grid;place-items:center;color:var(--accent);background:#10243a;border:1px solid rgba(53,200,255,.35);border-radius:12px;font-size:19px;opacity:0;pointer-events:none;transition:.2s}.back-top.show{opacity:1;pointer-events:auto}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:1000px){.nav-links{gap:12px}.hero{gap:20px}.grid-3,.repo-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.nav{min-height:65px}.menu-toggle{display:block}.nav-links{display:none;position:absolute;top:65px;left:0;right:0;padding:20px 5%;flex-direction:column;align-items:stretch;gap:17px;background:#091729;border-bottom:1px solid var(--border)}.nav-links.open{display:flex}.nav-links a{padding:5px 0}.hero{grid-template-columns:1fr;padding-top:65px;padding-bottom:50px}.hero-visual{min-height:280px}.cloud-graphic{width:290px}.visual-label{right:5%;bottom:5%}.grid-2,.contact-panel{grid-template-columns:1fr}.grid-3,.repo-grid{grid-template-columns:1fr 1fr}.contact-panel{padding:25px}}
+@media(max-width:520px){.grid-3,.repo-grid,.stats-grid,.contact-links{grid-template-columns:1fr}.card{padding:20px}.section{padding-top:60px}h1{letter-spacing:-2px}.hero-description{font-size:14px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
+</style>
 </head>
-
 <body>
-
-  <!-- NAVIGATION -->
-  <header class="navbar">
-    <div class="container nav-inner">
-      <a class="brand" href="#home">AASHUTOSH<span>.</span></a>
-
-      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
-        ☰
-      </button>
-
-      <nav class="nav-links" id="navLinks">
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
-        <a href="#journey">Journey</a>
-        <a href="#certifications">Certifications</a>
-        <a href="#github">GitHub</a>
-        <a class="nav-cta" href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-
-    <!-- HOME -->
-    <section class="hero" id="home">
-      <div class="container">
-        <div class="hero-panel reveal">
-          <div class="hero-content">
-            <div class="status">
-              <span class="status-dot"></span>
-              CLOUD & INFRASTRUCTURE
-            </div>
-
-            <h1>Aashutosh <span class="gradient-text">Pandey</span></h1>
-
-            <p class="hero-role">
-              Cloud Administration · Systems · Networking · Automation
-            </p>
-
-            <p class="hero-summary">
-              Building practical knowledge in cloud and infrastructure operations.
-              Exploring how systems, networks, servers, and cloud platforms work
-              together to support reliable IT environments.
-            </p>
-
-            <div class="hero-actions">
-              <a class="button button-primary" href="#projects">Explore My Work ↗</a>
-              <a class="button button-secondary" href="https://github.com/aashutoshpandey01" target="_blank" rel="noopener noreferrer">GitHub Profile ↗</a>
-            </div>
-
-            <div class="tag-list hero-tags">
-              <span class="tag">AWS</span>
-              <span class="tag">Microsoft Azure</span>
-              <span class="tag">Linux</span>
-              <span class="tag">Windows Server</span>
-              <span class="tag">Networking</span>
-              <span class="tag">Docker</span>
-              <span class="tag">Automation</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">01 / ABOUT</span>
-          <h2>About <span class="gradient-text">Me</span></h2>
-          <p class="section-description">
-            My background, technical interests, and direction in IT infrastructure.
-          </p>
-        </div>
-
-        <div class="glass about-panel reveal">
-          <p>
-            I'm <strong>Aashutosh Pandey</strong>, a Computer Science and Engineering
-            graduate interested in cloud computing, infrastructure administration,
-            systems, and networking.
-          </p>
-
-          <p>
-            My technical learning focuses on understanding and managing real IT
-            environments — from operating systems, servers, and network
-            configurations to cloud infrastructure and automation.
-          </p>
-
-          <p>
-            I've worked on practical labs involving <strong>Windows Server,
-            Active Directory, Ubuntu Server, VMware, SSH, Nginx, storage,
-            user and permission management, and network troubleshooting.</strong>
-          </p>
-
-          <p>
-            I'm currently expanding my knowledge of <strong>AWS, Microsoft Azure,
-            cloud operations, Docker, infrastructure automation, and monitoring.</strong>
-            My goal is to build strong practical infrastructure skills and grow
-            into cloud and infrastructure engineering roles.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- TECHNICAL SKILLS -->
-    <section id="skills">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">02 / TECHNICAL FOUNDATION</span>
-          <h2>Technical <span class="gradient-text">Skills</span></h2>
-          <p class="section-description">
-            Technologies and areas I'm learning and practising through hands-on work.
-          </p>
-        </div>
-
-        <div class="grid-3">
-          <article class="card skill-card reveal">
-            <div class="skill-icon">OS</div>
-            <h3>Operating Systems</h3>
-            <p>Windows client administration, Windows Server, Ubuntu Server, Linux fundamentals, users, permissions, and services.</p>
-            <div class="tag-list">
-              <span class="tag">Windows</span>
-              <span class="tag">Ubuntu</span>
-              <span class="tag">Linux</span>
-            </div>
-          </article>
-
-          <article class="card skill-card reveal">
-            <div class="skill-icon">AD</div>
-            <h3>Windows Server & AD</h3>
-            <p>Domain environments, Active Directory, Group Policy, account administration, DNS, and shared resources.</p>
-            <div class="tag-list">
-              <span class="tag">AD DS</span>
-              <span class="tag">GPO</span>
-              <span class="tag">DNS</span>
-            </div>
-          </article>
-
-          <article class="card skill-card reveal">
-            <div class="skill-icon">NW</div>
-            <h3>Networking</h3>
-            <p>Network fundamentals, IP addressing, subnetting, routing concepts, troubleshooting, and network services.</p>
-            <div class="tag-list">
-              <span class="tag">TCP/IP</span>
-              <span class="tag">DNS</span>
-              <span class="tag">DHCP</span>
-            </div>
-          </article>
-
-          <article class="card skill-card reveal">
-            <div class="skill-icon">CL</div>
-            <h3>Cloud Platforms</h3>
-            <p>Learning cloud concepts, infrastructure services, identity, virtual networking, compute, storage, and monitoring.</p>
-            <div class="tag-list">
-              <span class="tag">AWS</span>
-              <span class="tag">Azure</span>
-              <span class="tag">GCP</span>
-            </div>
-          </article>
-
-          <article class="card skill-card reveal">
-            <div class="skill-icon">VM</div>
-            <h3>Virtualization & Storage</h3>
-            <p>Virtual machines, snapshots, cloning, virtual networking, OVF export/import, and Linux LVM basics.</p>
-            <div class="tag-list">
-              <span class="tag">VMware</span>
-              <span class="tag">LVM</span>
-              <span class="tag">Storage</span>
-            </div>
-          </article>
-
-          <article class="card skill-card reveal">
-            <div class="skill-icon">AU</div>
-            <h3>Automation & Tools</h3>
-            <p>Practical scripting and administration workflows for repetitive tasks across Windows and Linux environments.</p>
-            <div class="tag-list">
-              <span class="tag">PowerShell</span>
-              <span class="tag">Python</span>
-              <span class="tag">Bash / Zsh</span>
-              <span class="tag">Git</span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- PROJECTS -->
-    <section id="projects">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">03 / PROJECTS</span>
-          <h2>Technical <span class="gradient-text">Projects</span></h2>
-          <p class="section-description">
-            Practical work and repositories related to systems administration and automation.
-          </p>
-        </div>
-
-        <div class="grid-2">
-          <article class="card project-card reveal">
-            <div class="project-icon">01</div>
-            <h3>Ubuntu Server Automation</h3>
-            <p>
-              A cross-platform administration and automation repository containing
-              practical scripts for Linux and Windows Server environments.
-            </p>
-            <div class="tag-list">
-              <span class="tag">Python</span>
-              <span class="tag">Ubuntu</span>
-              <span class="tag">Windows Server</span>
-              <span class="tag">Automation</span>
-            </div>
-            <a class="text-link" href="https://github.com/aashutoshpandey01/ubuntu-server-automation" target="_blank" rel="noopener noreferrer">View Repository ↗</a>
-          </article>
-
-          <article class="card project-card reveal">
-            <div class="project-icon">02</div>
-            <h3>Cloud & Infrastructure Portfolio</h3>
-            <p>
-              This personal portfolio connects my technical learning, projects,
-              professional profiles, and cloud infrastructure interests.
-            </p>
-            <div class="tag-list">
-              <span class="tag">HTML</span>
-              <span class="tag">CSS</span>
-              <span class="tag">JavaScript</span>
-              <span class="tag">GitHub Pages</span>
-            </div>
-            <a class="text-link" href="https://github.com/aashutoshpandey01" target="_blank" rel="noopener noreferrer">Explore GitHub ↗</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- HANDS-ON LABS -->
-    <section id="labs">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">04 / PRACTICAL EXPERIENCE</span>
-          <h2>Hands-on <span class="gradient-text">Labs</span></h2>
-          <p class="section-description">
-            Personal lab environments used to practise administration, configuration, and troubleshooting.
-          </p>
-        </div>
-
-        <div class="grid-2">
-          <article class="card reveal">
-            <h3>Windows Server Environment</h3>
-            <p>
-              Configured a domain-based lab using Windows Server and Windows client
-              machines. Practised Active Directory, Group Policy, user administration,
-              security filtering, account policies, DNS troubleshooting, and shared folders.
-            </p>
-            <div class="tag-list">
-              <span class="tag">Active Directory</span>
-              <span class="tag">GPO</span>
-              <span class="tag">DNS</span>
-              <span class="tag">Windows Server</span>
-            </div>
-          </article>
-
-          <article class="card reveal">
-            <h3>Ubuntu Server Environment</h3>
-            <p>
-              Configured a Linux server with SSH, user and group management,
-              Nginx, PHP-FPM, UFW, Fail2ban, LVM storage, and practical
-              administration workflows.
-            </p>
-            <div class="tag-list">
-              <span class="tag">Ubuntu</span>
-              <span class="tag">SSH</span>
-              <span class="tag">Nginx</span>
-              <span class="tag">LVM</span>
-            </div>
-          </article>
-
-          <article class="card reveal">
-            <h3>Virtualization Lab</h3>
-            <p>
-              Practised virtual machine creation, NAT and bridged networking,
-              snapshots, cloning, and OVF export/import using VMware Workstation.
-            </p>
-            <div class="tag-list">
-              <span class="tag">VMware</span>
-              <span class="tag">Virtual Machines</span>
-              <span class="tag">Networking</span>
-            </div>
-          </article>
-
-          <article class="card reveal">
-            <h3>Networking & Troubleshooting</h3>
-            <p>
-              Built networking knowledge through structured learning and practical
-              exercises covering IP addressing, network devices, connectivity,
-              and troubleshooting fundamentals.
-            </p>
-            <div class="tag-list">
-              <span class="tag">TCP/IP</span>
-              <span class="tag">Subnetting</span>
-              <span class="tag">Troubleshooting</span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- TECHNICAL JOURNEY -->
-    <section id="journey">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">05 / TECHNICAL JOURNEY</span>
-          <h2>My Technical <span class="gradient-text">Journey</span></h2>
-          <p class="section-description">
-            A practical progression from core infrastructure knowledge toward cloud operations.
-          </p>
-        </div>
-
-        <div class="journey-list">
-          <article class="journey-item reveal">
-            <div class="journey-icon">01</div>
-            <div>
-              <h3>Operating Systems & Server Administration</h3>
-              <p>
-                Building a foundation in Windows, Windows Server, Ubuntu Server,
-                account management, permissions, services, and system troubleshooting.
-              </p>
-            </div>
-          </article>
-
-          <article class="journey-item reveal">
-            <div class="journey-icon">02</div>
-            <div>
-              <h3>Networking & Virtualization</h3>
-              <p>
-                Understanding network communication, IP addressing, DNS, virtual
-                networking, virtual machines, snapshots, cloning, and storage basics.
-              </p>
-            </div>
-          </article>
-
-          <article class="journey-item reveal">
-            <div class="journey-icon">03</div>
-            <div>
-              <h3>Cloud Fundamentals</h3>
-              <p>
-                Studying cloud service models, deployment models, regions,
-                availability zones, IAM, virtual networking, monitoring,
-                high availability, and cost management.
-              </p>
-            </div>
-          </article>
-
-          <article class="journey-item reveal">
-            <div class="journey-icon">04</div>
-            <div>
-              <h3>Cloud Platforms — AWS & Azure</h3>
-              <p>
-                Developing practical understanding of cloud compute, storage,
-                networking, identity, security controls, and infrastructure operations.
-              </p>
-            </div>
-          </article>
-
-          <article class="journey-item reveal">
-            <div class="journey-icon">05</div>
-            <div>
-              <h3>Building Toward Cloud Operations</h3>
-              <p>
-                Expanding into monitoring, logging, backup and recovery,
-                automation, Docker, infrastructure as code, and operational
-                troubleshooting — the skills used to support and maintain
-                production infrastructure.
-              </p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- CERTIFICATIONS -->
-    <section id="certifications">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">06 / CREDENTIALS</span>
-          <h2>Certifications & <span class="gradient-text">Credentials</span></h2>
-          <p class="section-description">
-            A place to explore my completed learning credentials and verified badges.
-          </p>
-        </div>
-
-        <div class="glass cert-panel reveal">
-          <div>
-            <h3>My Credly Badge Wallet</h3>
-            <p>
-              View my earned digital badges and credentials through my public
-              Credly profile. The profile is the source of truth for badge names,
-              issuers, and verification details.
-            </p>
-          </div>
-          <a class="button button-primary" href="https://www.credly.com/users/aashutosh-pandey01/badges/credly" target="_blank" rel="noopener noreferrer">View Credly Profile ↗</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- LEARNING -->
-    <section id="learning">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">07 / CONTINUOUS LEARNING</span>
-          <h2>Learning & <span class="gradient-text">Development</span></h2>
-          <p class="section-description">
-            Courses and technical subjects covered as part of my ongoing learning.
-          </p>
-        </div>
-
-        <div class="grid-2">
-          <article class="card reveal">
-            <h3>Cisco Networking Academy</h3>
-            <div class="learning-list">
-              <div class="learning-item">Networking Basics</div>
-              <div class="learning-item">Network Addressing & Basic Troubleshooting</div>
-              <div class="learning-item">Network Support & Security</div>
-              <div class="learning-item">Networking Devices & Initial Configuration</div>
-              <div class="learning-item">Network Technician Career Path</div>
-              <div class="learning-item">Introduction to IoT</div>
-            </div>
-          </article>
-
-          <article class="card reveal">
-            <h3>Systems & Programming Fundamentals</h3>
-            <div class="learning-list">
-              <div class="learning-item">NDG Linux Essentials</div>
-              <div class="learning-item">Operating Systems Basics</div>
-              <div class="learning-item">Operating Systems Support</div>
-              <div class="learning-item">Hardware and Upgrade Support</div>
-              <div class="learning-item">Python Essentials 1</div>
-              <div class="learning-item">Python Essentials 2</div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- PROFESSIONAL INTERESTS -->
-    <section id="interests">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">08 / CAREER DIRECTION</span>
-          <h2>Professional <span class="gradient-text">Interests</span></h2>
-          <p class="section-description">
-            Infrastructure and cloud-focused career paths I'm working toward.
-          </p>
-        </div>
-
-        <div class="grid-3">
-          <article class="card interest-card reveal">
-            <h3>Cloud Support Engineer</h3>
-            <p>
-              Supporting cloud services, investigating technical issues,
-              troubleshooting infrastructure, and helping maintain reliable environments.
-            </p>
-          </article>
-
-          <article class="card interest-card reveal">
-            <h3>Infrastructure Support Engineer</h3>
-            <p>
-              Working with servers, operating systems, networking, storage,
-              and infrastructure incidents.
-            </p>
-          </article>
-
-          <article class="card interest-card reveal">
-            <h3>Junior Cloud Engineer</h3>
-            <p>
-              Building and maintaining cloud resources, virtual networks,
-              compute services, storage, and access controls.
-            </p>
-          </article>
-
-          <article class="card interest-card reveal">
-            <h3>Systems Administrator</h3>
-            <p>
-              Administering Windows and Linux systems, identity services,
-              permissions, updates, backups, and system health.
-            </p>
-          </article>
-
-          <article class="card interest-card reveal">
-            <h3>Cloud Operations Engineer</h3>
-            <p>
-              Supporting day-to-day cloud operations through monitoring,
-              incident response, automation, and operational maintenance.
-            </p>
-          </article>
-
-          <article class="card interest-card reveal">
-            <h3>Infrastructure & Automation</h3>
-            <p>
-              Improving infrastructure workflows through scripting,
-              repeatable configurations, and practical automation tools.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- GITHUB OVERVIEW -->
-    <section id="github">
-      <div class="container">
-        <div class="section-heading reveal">
-          <span class="eyebrow">09 / OPEN SOURCE & CODE</span>
-          <h2>GitHub <span class="gradient-text">Overview</span></h2>
-          <p class="section-description">
-            Explore my repositories, practical projects, and ongoing technical work.
-          </p>
-        </div>
-
-        <div class="glass github-panel reveal">
-          <div class="github-top">
-            <div class="github-profile">
-              <img
-                class="github-avatar"
-                id="githubAvatar"
-                src="https://github.com/aashutoshpandey01.png"
-                alt="GitHub profile avatar"
-                loading="lazy"
-              >
-              <div>
-                <h3 id="githubName">Aashutosh Pandey</h3>
-                <p>@aashutoshpandey01</p>
-              </div>
-            </div>
-
-            <a class="button button-secondary" href="https://github.com/aashutoshpandey01" target="_blank" rel="noopener noreferrer">Visit GitHub ↗</a>
-          </div>
-
-          <div class="github-stats">
-            <div class="stat">
-              <strong id="repoCount">—</strong>
-              <span>PUBLIC REPOSITORIES</span>
-            </div>
-            <div class="stat">
-              <strong id="followers">—</strong>
-              <span>FOLLOWERS</span>
-            </div>
-            <div class="stat">
-              <strong id="following">—</strong>
-              <span>FOLLOWING</span>
-            </div>
-          </div>
-
-          <div class="repo-heading">
-            <h3>Recently Updated Repositories</h3>
-            <span class="mono muted" style="font-size:10px;">LIVE PUBLIC DATA</span>
-          </div>
-
-          <div class="repo-list" id="repoList">
-            <div class="repo">
-              <p>Loading public repositories from GitHub...</p>
-            </div>
-          </div>
-
-          <p class="api-note" id="githubNote">
-            Repository information is retrieved from the public GitHub API.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact">
-      <div class="container">
-        <div class="glass contact-panel reveal">
-          <span class="eyebrow">10 / GET IN TOUCH</span>
-          <h2>Let's <span class="gradient-text">Connect</span></h2>
-          <p>
-            Interested in cloud infrastructure, systems administration,
-            networking, or technical collaboration? Connect with me through
-            the platforms below.
-          </p>
-
-          <div class="contact-links">
-            <a class="contact-link" href="mailto:officialaashu760@outlook.com">✉ Email</a>
-            <a class="contact-link" href="https://github.com/aashutoshpandey01" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
-            <a class="contact-link" href="https://www.linkedin.com/in/aashutosh-pandey-7995b7416" target="_blank" rel="noopener noreferrer">in LinkedIn</a>
-            <a class="contact-link" href="https://x.com/the_aashupandey" target="_blank" rel="noopener noreferrer">𝕏 X</a>
-            <a class="contact-link" href="https://www.credly.com/users/aashutosh-pandey01/badges/credly" target="_blank" rel="noopener noreferrer">◆ Credly</a>
-            <a class="contact-link whatsapp" href="https://wa.me/9779804833432" target="_blank" rel="noopener noreferrer">◉ WhatsApp</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="container footer-inner">
-      <p>© <span id="year"></span> Aashutosh Pandey. All rights reserved.</p>
-      <p>Cloud & Infrastructure · Built with purpose.</p>
-      <a href="#home">Back to Home ↑</a>
-    </div>
-  </footer>
-
-  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
-
-  <script>
-    // Mobile navigation
-    const menuToggle = document.getElementById("menuToggle");
-    const navLinks = document.getElementById("navLinks");
-
-    menuToggle.addEventListener("click", () => {
-      const isOpen = navLinks.classList.toggle("open");
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
-      menuToggle.textContent = isOpen ? "✕" : "☰";
-    });
-
-    navLinks.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        navLinks.classList.remove("open");
-        menuToggle.setAttribute("aria-expanded", "false");
-        menuToggle.textContent = "☰";
-      });
-    });
-
-    // Reveal elements on scroll
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll(".reveal").forEach(element => {
-      revealObserver.observe(element);
-    });
-
-    // Back-to-top button
-    const backTop = document.getElementById("backTop");
-
-    window.addEventListener("scroll", () => {
-      backTop.classList.toggle("visible", window.scrollY > 500);
-    });
-
-    backTop.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-    // Footer year
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Active navigation link
-    const sections = document.querySelectorAll("main section[id]");
-    const navItems = document.querySelectorAll(".nav-links a[href^='#']");
-
-    const activeObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navItems.forEach(link => {
-            link.classList.toggle(
-              "active",
-              link.getAttribute("href") === `#${entry.target.id}`
-            );
-          });
-        }
-      });
-    }, { rootMargin: "-25% 0px -65% 0px" });
-
-    sections.forEach(section => activeObserver.observe(section));
-
-    // GitHub public profile and repository data
-    const GITHUB_USERNAME = "aashutoshpandey01";
-    const GITHUB_API = "https://api.github.com";
-
-    async function loadGitHubData() {
-      const repoList = document.getElementById("repoList");
-      const githubNote = document.getElementById("githubNote");
-
-      try {
-        const headers = {
-          "Accept": "application/vnd.github+json"
-        };
-
-        const [profileResponse, reposResponse] = await Promise.all([
-          fetch(`${GITHUB_API}/users/${GITHUB_USERNAME}`, { headers }),
-          fetch(`${GITHUB_API}/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`, { headers })
-        ]);
-
-        if (!profileResponse.ok || !reposResponse.ok) {
-          throw new Error("GitHub API request failed.");
-        }
-
-        const profile = await profileResponse.json();
-        const repositories = await reposResponse.json();
-
-        document.getElementById("githubName").textContent =
-          profile.name || GITHUB_USERNAME;
-
-        document.getElementById("githubAvatar").src =
-          profile.avatar_url || `https://github.com/${GITHUB_USERNAME}.png`;
-
-        document.getElementById("repoCount").textContent =
-          profile.public_repos ?? repositories.length;
-
-        document.getElementById("followers").textContent =
-          profile.followers ?? 0;
-
-        document.getElementById("following").textContent =
-          profile.following ?? 0;
-
-        const publicRepos = repositories
-          .filter(repo => !repo.fork)
-          .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-          .slice(0, 4);
-
-        if (publicRepos.length === 0) {
-          repoList.innerHTML = `
-            <div class="repo">
-              <p>No public repositories are currently available to display.</p>
-            </div>`;
-          return;
-        }
-
-        repoList.innerHTML = publicRepos.map(repo => {
-          const description = repo.description || "No repository description provided.";
-          const language = repo.language || "Not specified";
-          const updated = new Date(repo.updated_at).toLocaleDateString(
-            undefined,
-            { year: "numeric", month: "short", day: "numeric" }
-          );
-
-          return `
-            <article class="repo">
-              <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">
-                ${escapeHTML(repo.name)} ↗
-              </a>
-              <p>${escapeHTML(description)}</p>
-              <div class="repo-meta">
-                <span>● ${escapeHTML(language)}</span>
-                <span>★ ${repo.stargazers_count}</span>
-                <span>Updated ${updated}</span>
-              </div>
-            </article>`;
-        }).join("");
-
-        githubNote.textContent =
-          "Live public repository data from GitHub. Information may be subject to GitHub API rate limits.";
-
-      } catch (error) {
-        repoList.innerHTML = `
-          <div class="repo">
-            <p>GitHub data could not be loaded right now. You can still explore all repositories directly on GitHub.</p>
-            <a href="https://github.com/${GITHUB_USERNAME}" target="_blank" rel="noopener noreferrer">
-              Open GitHub Profile ↗
-            </a>
-          </div>`;
-
-        githubNote.textContent =
-          "Live GitHub data is temporarily unavailable. Please visit the profile directly.";
-      }
-    }
-
-    // Escape API-provided text before inserting it into HTML
-    function escapeHTML(value) {
-      return String(value).replace(/[&<>"']/g, character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-      })[character]);
-    }
-
-    loadGitHubData();
-  </script>
-
+<div class="background" aria-hidden="true"><div class="orb one"></div><div class="orb two"></div></div>
+
+<!-- ORIGINAL HEADER FROM OLD CODE v0.1 -->
+<div class="topbar">
+<nav class="nav" aria-label="Main navigation">
+<a class="brand" href="#home"><span class="brand-icon">☁</span><span>Aashutosh Pandey</span></a>
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<div class="nav-links" id="navLinks">
+<a href="#home">Home</a><a href="#about">About</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#labs">Labs</a><a href="#certifications">Certifications</a><a href="#roadmap">Roadmap</a><a href="#career">Interests</a><a href="#github">GitHub</a><a href="#contact" class="nav-cta">Let's Connect ↗</a>
+</div>
+</nav>
+</div>
+
+<main>
+<!-- ORIGINAL HOME / HERO FROM OLD CODE v0.1 -->
+<section class="container hero" id="home">
+<div class="hero-content">
+<div class="eyebrow"><span class="pulse"></span>Cloud & Infrastructure Portfolio</div>
+<h1>Aashutosh<br><span class="gradient">Pandey.</span></h1>
+<div class="hero-role">Cloud Support · <span>Cloud Administration</span></div>
+<p class="hero-description">Building practical skills in cloud infrastructure, systems administration, networking and automation. Focused on understanding how real-world IT environments operate—from servers and networks to cloud platforms, infrastructure monitoring and operational troubleshooting.</p>
+<div class="hero-tags"><span class="tag">AWS</span><span class="tag">Microsoft Azure</span><span class="tag">Google Cloud</span><span class="tag">Linux</span><span class="tag">Windows Server</span><span class="tag">Networking</span><span class="tag">Python Automation</span></div>
+<div class="hero-actions"><a class="btn btn-primary" href="#projects">Explore My Work ↗</a><a class="btn btn-secondary" href="https://github.com/aashutoshpandey01" target="_blank" rel="noopener noreferrer">GitHub Profile ↗</a></div>
+</div>
+<div class="hero-visual" aria-label="Cloud infrastructure illustration"><div class="cloud-graphic"><div class="cloud-symbol">☁</div></div><div class="visual-label">● Infrastructure · Cloud · Automation</div></div>
+</section>
+
+<!-- ORIGINAL ABOUT AND TECHNICAL JOURNEY FROM OLD CODE v0.1 -->
+<section class="container section" id="about">
+<div class="section-heading reveal"><span class="section-kicker">01 / Introduction</span><h2>About Me</h2><p>A little about my technical direction, interests and approach to infrastructure.</p></div>
+<div class="grid-2">
+<article class="card reveal"><div class="card-icon">👨‍💻</div><h3>Who I Am</h3><p>I'm Aashutosh Pandey, a Computer Science and Engineering graduate focused on cloud computing, IT infrastructure and systems administration. My learning combines networking fundamentals, Windows Server, Linux administration, cloud platforms and practical automation.</p><br><p>I enjoy understanding how infrastructure works behind the scenes: how servers communicate, how identities and permissions are managed, how systems are monitored, and how administrators troubleshoot operational issues.</p></article>
+<article class="card reveal"><div class="card-icon">🎯</div><h3>What I Focus On</h3><ul class="check-list"><li>Cloud infrastructure and support operations</li><li>Windows Server and Linux administration</li><li>Networking and infrastructure troubleshooting</li><li>Identity, access and directory services</li><li>Monitoring, maintenance and operational automation</li><li>Infrastructure as Code and DevOps fundamentals</li></ul></article>
+</div>
+<div class="card reveal" style="margin-top:22px"><h3>My Technical Journey</h3><div class="journey" style="margin-top:22px">
+<div class="journey-item"><h4>Networking Fundamentals</h4><p>Network addressing, devices, troubleshooting, protocols and connectivity.</p></div>
+<div class="journey-item"><h4>Systems Administration</h4><p>Windows Server, Active Directory, Group Policy, Ubuntu Server, SSH and services.</p></div>
+<div class="journey-item"><h4>Infrastructure Automation</h4><p>Practical Python, PowerShell and shell-based administrative workflows.</p></div>
+<div class="journey-item"><h4>Cloud Platforms</h4><p>Developing practical knowledge of AWS, Microsoft Azure and cloud infrastructure.</p></div>
+<div class="journey-item"><h4>Next: Infrastructure Engineering</h4><p>Expanding into Terraform, Ansible, containers, CI/CD and cloud operations.</p></div>
+</div></div>
+</section>
+
+<!-- SKILLS -->
+<section class="container section" id="skills"><div class="section-heading reveal"><span class="section-kicker">02 / Technical Stack</span><h2>Technical Skills & Technologies</h2><p>Tools, platforms and concepts I have studied or am currently developing through hands-on practice.</p></div>
+<div class="grid-2">
+<article class="card reveal">
+<div class="skill-group"><h3>☁ Cloud Platforms</h3><div class="skill-list"><span class="skill-chip">Amazon Web Services</span><span class="skill-chip">Microsoft Azure</span><span class="skill-chip learning">Google Cloud Platform</span></div></div>
+<div class="skill-group"><h3>🖥 Operating Systems & Servers</h3><div class="skill-list"><span class="skill-chip">Windows Server</span><span class="skill-chip">Ubuntu Server</span><span class="skill-chip">Linux Administration</span><span class="skill-chip">Windows Administration</span><span class="skill-chip">Active Directory</span></div></div>
+<div class="skill-group"><h3>🌐 Networking</h3><div class="skill-list"><span class="skill-chip">TCP/IP</span><span class="skill-chip">DNS</span><span class="skill-chip">DHCP</span><span class="skill-chip">Subnetting</span><span class="skill-chip">Routing & Switching</span><span class="skill-chip">Firewalls</span><span class="skill-chip">VPN Fundamentals</span></div></div>
+</article>
+<article class="card reveal">
+<div class="skill-group"><h3>⚙ Automation & Scripting</h3><div class="skill-list"><span class="skill-chip">Python</span><span class="skill-chip">PowerShell</span><span class="skill-chip">Bash</span><span class="skill-chip">Zsh</span></div></div>
+<div class="skill-group"><h3>📦 DevOps & Infrastructure as Code</h3><div class="skill-list"><span class="skill-chip learning">Docker</span><span class="skill-chip learning">Kubernetes</span><span class="skill-chip learning">Terraform</span><span class="skill-chip learning">Ansible</span><span class="skill-chip learning">Azure Bicep</span><span class="skill-chip learning">GitHub Actions</span><span class="skill-chip learning">CI/CD</span></div></div>
+<div class="skill-group"><h3>📊 Operations & Tools</h3><div class="skill-list"><span class="skill-chip">Git</span><span class="skill-chip">GitHub</span><span class="skill-chip">SSH</span><span class="skill-chip">Nginx</span><span class="skill-chip">VMware</span><span class="skill-chip">Monitoring</span><span class="skill-chip">Troubleshooting</span></div></div>
+</article></div>
+<div class="note reveal"><strong>Transparency:</strong> Technologies are shown as areas of study and practice, not as claims of professional-level expertise. Some tools are part of my current learning roadmap.</div></section>
+
+<!-- PROJECTS -->
+<section class="container section" id="projects"><div class="section-heading reveal"><span class="section-kicker">03 / Development & Automation</span><h2>Featured Projects</h2><p>Practical work focused on infrastructure administration, automation and technical problem-solving.</p></div>
+<div class="grid-3">
+<article class="card project-card reveal"><div class="project-top"><div class="project-symbol">⚙</div><span class="project-type">Automation</span></div><h3>Cross-Platform Server Automation</h3><p>A Python automation project developed around administrative tasks and operational workflows across Windows Server and Ubuntu/Linux environments.</p><div class="project-tags"><span>Python</span><span>Windows</span><span>Linux</span><span>Automation</span></div><a class="text-link" href="https://github.com/aashutoshpandey01/ubuntu-server-automation" target="_blank" rel="noopener noreferrer">View Repository ↗</a></article>
+<article class="card project-card reveal"><div class="project-top"><div class="project-symbol">🖥</div><span class="project-type">Infrastructure Lab</span></div><h3>Windows Server & Active Directory</h3><p>A practical lab covering domain services, user and group management, Group Policy, access restrictions, shared folders, DNS troubleshooting and administration.</p><div class="project-tags"><span>Windows Server</span><span>AD DS</span><span>GPO</span><span>DNS</span></div><a class="text-link" href="#labs">Explore Lab Details ↗</a></article>
+<article class="card project-card reveal"><div class="project-top"><div class="project-symbol">🐧</div><span class="project-type">Linux Administration</span></div><h3>Ubuntu Server Administration</h3><p>A Linux server lab involving SSH, user and group management, Nginx, PHP-FPM, firewall configuration, Fail2ban and LVM storage.</p><div class="project-tags"><span>Ubuntu</span><span>SSH</span><span>Nginx</span><span>Storage</span></div><a class="text-link" href="#labs">Explore Lab Details ↗</a></article>
+</div></section>
+
+<!-- LABS -->
+<section class="container section" id="labs"><div class="section-heading reveal"><span class="section-kicker">04 / Practical Experience</span><h2>Hands-on Infrastructure Labs</h2><p>Building and troubleshooting a small virtualized infrastructure environment to understand real administration workflows.</p></div>
+<div class="grid-2">
+<article class="card lab-card reveal"><div class="card-icon">🪟</div><h3>Windows Server Environment</h3><p>Domain-based Windows infrastructure using a Windows Server domain controller and a Windows client.</p><ul class="check-list"><li>Active Directory Domain Services</li><li>Domain users, groups and organizational units</li><li>Group Policy and security filtering</li><li>Password and account policies</li><li>File shares and access permissions</li><li>DNS troubleshooting and administration</li><li>Server backup and recovery concepts</li></ul></article>
+<article class="card lab-card reveal"><div class="card-icon">🐧</div><h3>Ubuntu Server Environment</h3><p>Linux server administration with service configuration, access control and storage management.</p><ul class="check-list"><li>Linux users, groups and permissions</li><li>SSH remote administration</li><li>Nginx web server configuration</li><li>PHP-FPM and website hosting</li><li>UFW firewall and Fail2ban</li><li>LVM storage management</li><li>Python-based administrative automation</li></ul></article>
+<article class="card lab-card reveal"><div class="card-icon">🌐</div><h3>Networking & Virtualization</h3><p>Understanding network communication and virtual infrastructure through practical lab scenarios.</p><ul class="check-list"><li>TCP/IP and subnetting practice</li><li>IP addressing and gateway configuration</li><li>DNS and connectivity troubleshooting</li><li>VMware virtual machines</li><li>NAT and bridged networking</li><li>Virtual machine cloning and migration</li></ul></article>
+<article class="card lab-card reveal"><div class="card-icon">📈</div><h3>Monitoring & Operations</h3><p>Exploring infrastructure visibility and automation to improve routine administration workflows.</p><ul class="check-list"><li>Server resource monitoring</li><li>System and service status checks</li><li>Log review and troubleshooting</li><li>Scheduled Python automation</li><li>Operational reporting concepts</li><li>Windows and Linux administration workflows</li></ul></article>
+</div></section>
+
+<!-- CERTIFICATIONS -->
+<section class="container section" id="certifications"><div class="section-heading reveal"><span class="section-kicker">05 / Learning Achievements</span><h2>Certifications & Learning</h2><p>Networking, operating systems, technical support and foundational IT learning.</p></div>
+<div class="grid-2">
+<article class="card reveal"><div class="card-icon">🎓</div><h3>Cisco Networking Academy</h3>
+<div class="cert-item"><div class="cert-icon">✓</div><div><h4>Networking Learning Path</h4><p>Networking Basics, Network Addressing and Basic Troubleshooting, Network Support and Security, and Networking Devices and Initial Configuration.</p></div></div>
+<div class="cert-item"><div class="cert-icon">✓</div><div><h4>Linux & Operating Systems</h4><p>NDG Linux Essentials, Operating Systems Basics, and Operating Systems Support.</p></div></div>
+<div class="cert-item"><div class="cert-icon">✓</div><div><h4>Python & Hardware</h4><p>Python Essentials 1 and 2, Hardware and Upgrade Support, and additional technical learning.</p></div></div>
+<a class="text-link" href="https://www.credly.com/users/aashutosh-pandey01/badges/credly" target="_blank" rel="noopener noreferrer">View Verified Badges ↗</a></article>
+<article class="card reveal"><div class="card-icon">🏅</div><h3>Additional Learning</h3>
+<div class="cert-item"><div class="cert-icon">✓</div><div><h4>OPSWAT</h4><p>Additional technical learning achievement.</p></div></div>
+<div class="cert-item"><div class="cert-icon">✓</div><div><h4>Professor Messer — CompTIA Network+</h4><p>Completed the Network+ N10-009 video learning playlist, covering networking concepts and troubleshooting.</p></div></div>
+<div class="cert-item"><div class="cert-icon">✓</div><div><h4>Practical Self-Directed Labs</h4><p>Hands-on learning with Windows Server, Active Directory, Ubuntu Server, VMware and automation.</p></div></div>
+<a class="text-link" href="https://www.credly.com/users/aashutosh-pandey01/badges/credly" target="_blank" rel="noopener noreferrer">Open Credly Profile ↗</a></article>
+</div></section>
+
+<!-- NEW BUILDING TOWARD CLOUD OPERATIONS SECTION -->
+<section class="container section" id="roadmap"><div class="section-heading reveal"><span class="section-kicker">06 / Continuous Development</span><h2>Building Toward Cloud Operations</h2><p>Developing practical infrastructure and cloud operations capabilities step by step.</p></div>
+<div class="grid-2">
+<article class="card reveal">
+<div class="roadmap-step"><span class="step-number">01</span><div><h4>Core IT Infrastructure</h4><p>Networking, Windows and Linux administration, virtualization, identity, storage and troubleshooting.</p></div></div>
+<div class="roadmap-step"><span class="step-number">02</span><div><h4>Cloud Fundamentals</h4><p>Cloud models, regions, availability zones, IAM, virtual networking, monitoring and cost management.</p></div></div>
+<div class="roadmap-step"><span class="step-number">03</span><div><h4>AWS & Azure Administration</h4><p>Cloud compute, storage, networking, access control, resource management and operational services.</p></div></div>
+</article>
+<article class="card reveal">
+<div class="roadmap-step"><span class="step-number">04</span><div><h4>Automation & Infrastructure as Code</h4><p>PowerShell, Python, Bash, Terraform, Bicep and repeatable administration workflows.</p></div></div>
+<div class="roadmap-step"><span class="step-number">05</span><div><h4>Containers & Modern Infrastructure</h4><p>Docker, container operations, Kubernetes concepts and configuration management with Ansible.</p></div></div>
+<div class="roadmap-step"><span class="step-number">06</span><div><h4>Monitoring & Production Operations</h4><p>Logging, alerting, incident troubleshooting, availability, reliability and operational practices.</p></div></div>
+</article>
+</div></section>
+
+<!-- PROFESSIONAL INTERESTS: OLD DESIGN, NEW HEADING -->
+<section class="container section" id="career"><div class="section-heading reveal"><span class="section-kicker">07 / Career Direction</span><h2>Interested in Infrastructure Roles</h2><p>Roles aligned with my current learning direction and long-term infrastructure career goals.</p></div>
+<div class="grid-3">
+<article class="card reveal"><div class="card-icon">☁</div><h3>Cloud Support Engineer</h3><p>Cloud service support, infrastructure troubleshooting, access management and operational assistance.</p></article>
+<article class="card reveal"><div class="card-icon">🖥</div><h3>Systems Administrator</h3><p>Windows and Linux administration, server maintenance, identity services and infrastructure support.</p></article>
+<article class="card reveal"><div class="card-icon">🌐</div><h3>Infrastructure Support Engineer</h3><p>Network, server, virtualization and platform troubleshooting across IT environments.</p></article>
+<article class="card reveal"><div class="card-icon">⚙</div><h3>Cloud Operations Engineer</h3><p>Cloud operations, monitoring, resource management and incident troubleshooting.</p></article>
+<article class="card reveal"><div class="card-icon">🚀</div><h3>Junior Cloud Engineer</h3><p>Building and maintaining cloud infrastructure while developing automation and deployment skills.</p></article>
+<article class="card reveal"><div class="card-icon">🔧</div><h3>Infrastructure Automation</h3><p>Improving administration workflows through scripting, configuration management and automation.</p></article>
+</div></section>
+
+<!-- GITHUB OVERVIEW: OLD STATS DESIGN + NEW RECENTLY UPDATED REPOSITORIES -->
+<section class="container section" id="github"><div class="section-heading reveal"><span class="section-kicker">08 / Open Source & Activity</span><h2>GitHub Overview</h2><p>Explore my repositories, technical experiments and ongoing development work.</p></div>
+<div class="stats-grid reveal">
+<div class="stat-card"><span class="stat-value" id="repoCount">—</span><span class="stat-label">Public Repositories</span></div>
+<div class="stat-card"><span class="stat-value" id="followerCount">—</span><span class="stat-label">GitHub Followers</span></div>
+<div class="stat-card"><span class="stat-value" id="starCount">—</span><span class="stat-label">Repository Stars</span></div>
+</div>
+<p class="github-note">Public profile metrics are loaded from the GitHub API. Values may be unavailable temporarily if GitHub rate limits requests.</p>
+<h3 style="margin-top:30px">Recently Updated Repositories</h3>
+<div class="repo-grid" id="repoGrid"><article class="repo-card"><p>Loading recently updated repositories…</p></article></div>
+<div style="margin-top:22px"><a class="btn btn-primary" href="https://github.com/aashutoshpandey01" target="_blank" rel="noopener noreferrer">Explore GitHub ↗</a></div>
+</section>
+
+<!-- CONTACT -->
+<section class="container section" id="contact"><div class="section-heading reveal"><span class="section-kicker">09 / Get In Touch</span><h2>Let's Connect</h2><p>Interested in cloud infrastructure, systems administration, networking and technology.</p></div>
+<div class="contact-panel reveal"><div><h3>Build. Learn. Improve.</h3><p>I'm always interested in connecting with IT professionals, cloud and infrastructure communities, and people who enjoy solving real-world technical problems.</p><p style="color:#c8eaff;margin-top:18px">Open to opportunities aligned with Cloud Support, Infrastructure Support, Systems Administration and Junior Cloud Engineering.</p></div>
+<div class="contact-links">
+<a class="contact-link" href="https://github.com/aashutoshpandey01" target="_blank" rel="noopener noreferrer">⌘ GitHub ↗</a>
+<a class="contact-link" href="https://www.linkedin.com/in/aashutosh-pandey-7995b7416" target="_blank" rel="noopener noreferrer">in LinkedIn ↗</a>
+<a class="contact-link" href="https://www.credly.com/users/aashutosh-pandey01/badges/credly" target="_blank" rel="noopener noreferrer">✓ Credly ↗</a>
+<a class="contact-link" href="https://x.com/the_aashupandey" target="_blank" rel="noopener noreferrer">𝕏 X / Twitter ↗</a>
+<a class="contact-link" href="mailto:officialaashu760@outlook.com">✉ Email Me ↗</a>
+<a class="contact-link" href="https://wa.me/9779804833432" target="_blank" rel="noopener noreferrer">☏ WhatsApp ↗</a>
+<a class="contact-link" href="https://aashutoshpandey01.github.io">🌐 Portfolio Home ↗</a>
+</div></div></section>
+</main>
+<footer><strong>Aashutosh Pandey</strong> · Cloud & Infrastructure<br>Learning. Building. Troubleshooting. Automating.<br><span style="display:block;margin-top:10px">© <span id="year"></span> Aashutosh Pandey. All rights reserved.</span></footer>
+<a href="#home" class="back-top" id="backTop" aria-label="Back to top">↑</a>
+<script>
+const menuToggle=document.getElementById("menuToggle"),navLinks=document.getElementById("navLinks");
+menuToggle.addEventListener("click",()=>{const open=navLinks.classList.toggle("open");menuToggle.setAttribute("aria-expanded",open);menuToggle.textContent=open?"✕":"☰"});
+document.querySelectorAll(".nav-links a").forEach(link=>link.addEventListener("click",()=>{navLinks.classList.remove("open");menuToggle.setAttribute("aria-expanded","false");menuToggle.textContent="☰"}));
+document.getElementById("year").textContent=new Date().getFullYear();
+const backTop=document.getElementById("backTop");window.addEventListener("scroll",()=>backTop.classList.toggle("show",window.scrollY>450));
+const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");revealObserver.unobserve(entry.target)}}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>revealObserver.observe(el));
+const sections=document.querySelectorAll("main section[id]"),navItems=document.querySelectorAll(".nav-links a");
+const sectionObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)navItems.forEach(link=>link.classList.toggle("active",link.getAttribute("href")==="#"+entry.target.id))}),{rootMargin:"-35% 0px -55% 0px"});
+sections.forEach(section=>sectionObserver.observe(section));
+
+function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]))}
+async function loadGitHub(){
+const username="aashutoshpandey01",repoGrid=document.getElementById("repoGrid");
+try{
+const [userRes,reposRes]=await Promise.all([fetch(`https://api.github.com/users/${username}`),fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`)]);
+if(!userRes.ok||!reposRes.ok)throw new Error("GitHub API request failed");
+const user=await userRes.json(),repos=await reposRes.json();
+document.getElementById("repoCount").textContent=user.public_repos??"—";
+document.getElementById("followerCount").textContent=user.followers??"—";
+document.getElementById("starCount").textContent=repos.reduce((sum,repo)=>sum+(repo.stargazers_count||0),0);
+const recent=repos.filter(repo=>!repo.fork).sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at)).slice(0,6);
+repoGrid.innerHTML=recent.length?recent.map(repo=>`<article class="repo-card"><h3><a href="${escapeHTML(repo.html_url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(repo.name)}</a></h3><p>${escapeHTML(repo.description||"No description provided.")}</p><div class="repo-meta"><span>★ ${repo.stargazers_count}</span><span>${escapeHTML(repo.language||"Repository")}</span></div></article>`).join(""):"<article class='repo-card'><p>No public repositories found.</p></article>";
+}catch(error){
+document.getElementById("repoCount").textContent="N/A";document.getElementById("followerCount").textContent="N/A";document.getElementById("starCount").textContent="N/A";
+repoGrid.innerHTML="<article class='repo-card'><p>Unable to load repositories right now. Please visit GitHub directly.</p></article>";
+console.warn("Unable to load GitHub data:",error);
+}}
+loadGitHub();
+</script>
 </body>
 </html>
